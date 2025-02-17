@@ -8,7 +8,7 @@ from models import Note, User
 from utils import get_session, get_subject
 
 
-@pytest.fixture(scope='module', autouse=True)
+@pytest.fixture(scope='module')
 def test_session():
     session = next(get_session())
     if database_exists(session.bind.engine.url):

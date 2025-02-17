@@ -8,14 +8,19 @@ from sqlmodel import Session, SQLModel, create_engine, select
 
 from settings import settings
 
-engine = create_engine(settings.DB_URL)
+
+def _get_engine():
+    engine = create_engine(settings.DB_URL)
+    return engine
 
 
 def create_db_and_tables():
+    engine = _get_engine()
     SQLModel.metadata.create_all(engine)
 
 
 def get_session():
+    engine = _get_engine()
     with Session(engine) as session:
         yield session
 

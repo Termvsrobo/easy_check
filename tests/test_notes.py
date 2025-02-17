@@ -1,11 +1,7 @@
-from unittest.mock import ANY
 from http import HTTPStatus
+from unittest.mock import ANY
 
 import pytest
-
-from sqlmodel import select
-
-from models import Note
 
 
 def test_user_notes(get_user, get_authorized_client):
@@ -166,7 +162,12 @@ def test_delete_note(test_session, get_user, get_authorized_client, get_note):
     assert note.is_deleted
 
 
-def test_delete_foreign_note(test_session, get_user, get_authorized_client, get_note):
+def test_delete_foreign_note(
+    test_session,
+    get_user,
+    get_authorized_client,
+    get_note
+):
     username = 'test'
     password = 'test'
     user = get_user(
@@ -221,9 +222,14 @@ def test_get_admin_foreign_note(get_user, get_authorized_client, get_note):
     }
 
 
-
 @pytest.mark.parametrize('use_last_user_in_query', [True, False])
-def test_admin_notes(test_session, get_user, get_authorized_client, get_note, use_last_user_in_query):
+def test_admin_notes(
+    test_session,
+    get_user,
+    get_authorized_client,
+    get_note,
+    use_last_user_in_query
+):
     username = 'test'
     password = 'test'
     user = get_user(
@@ -232,7 +238,10 @@ def test_admin_notes(test_session, get_user, get_authorized_client, get_note, us
         password=password,
         is_admin=True
     )
-    users = [get_user(f'test_{i}', f'test_{i}@test.ru', f'test_{i}') for i in range(2)]
+    users = [
+        get_user(f'test_{i}', f'test_{i}@test.ru', f'test_{i}')
+        for i in range(2)
+    ]
     last_user = users[-1]
     notes = [
         get_note(
@@ -265,7 +274,12 @@ def test_admin_notes(test_session, get_user, get_authorized_client, get_note, us
         ]
 
 
-def test_admin_restore_note(test_session, get_user, get_authorized_client, get_note):
+def test_admin_restore_note(
+    test_session,
+    get_user,
+    get_authorized_client,
+    get_note
+):
     username = 'test'
     password = 'test'
     user = get_user(
@@ -279,7 +293,9 @@ def test_admin_restore_note(test_session, get_user, get_authorized_client, get_n
         email='othertest@test.com',
         password='other_pass'
     )
-    note = get_note('older_title', 'older_body', foreign_user.id, is_deleted=True)
+    note = get_note(
+        'older_title', 'older_body', foreign_user.id, is_deleted=True
+    )
     auth_client = get_authorized_client(user)
     response = auth_client.post(
         f'/api/notes/{note.id}/restore',
@@ -297,7 +313,12 @@ def test_admin_restore_note(test_session, get_user, get_authorized_client, get_n
     assert note.is_deleted is False
 
 
-def test_user_restore_note(test_session, get_user, get_authorized_client, get_note):
+def test_user_restore_note(
+    test_session,
+    get_user,
+    get_authorized_client,
+    get_note
+):
     username = 'test'
     password = 'test'
     user = get_user(
@@ -310,7 +331,9 @@ def test_user_restore_note(test_session, get_user, get_authorized_client, get_no
         email='othertest@test.com',
         password='other_pass'
     )
-    note = get_note('older_title', 'older_body', foreign_user.id, is_deleted=True)
+    note = get_note(
+        'older_title', 'older_body', foreign_user.id, is_deleted=True
+    )
     auth_client = get_authorized_client(user)
     response = auth_client.post(
         f'/api/notes/{note.id}/restore',
