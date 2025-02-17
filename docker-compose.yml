@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    ports:
+      - 8000:8000
+    command: sh -c "uvicorn --host 0.0.0.0 app:app"
+    volumes:
+      - media_volume:/app/media
+    healthcheck:
+      test: curl --fail http://localhost:8000/docs || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  media_volume:
+  db_data:
